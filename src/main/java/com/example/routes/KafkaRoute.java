@@ -12,11 +12,11 @@ public class KafkaRoute extends RouteBuilder {
         onException(Exception.class)
             .handled(true)
             .log("Error occurred: ${exception.message}")
-            .to("kafka:dlq-topic");
+            .to("kafka:dlq-topic?brokers={{kafka.broker:localhost:9092}}");
 
-        from("kafka:test-topic?brokers=localhost:9092")
+        from("kafka:test-topic?brokers={{kafka.broker:localhost:9092}}")
             .routeId("kafka-consumer")
-            .log("Received: ${body}")
-            .to("log:output");
+            .log("Received message from Kafka: ${body}")
+            .to("log:output?showAll=true&multiline=true");
     }
 }
